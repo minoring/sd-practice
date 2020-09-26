@@ -1,3 +1,19 @@
-fn main() {
-    println!("Hello, world!");
+mod app;
+mod error;
+mod input;
+pub(crate) mod utils;
+
+pub(crate) use self::input::{Replacer, Source};
+pub(crate) use error::Result;
+
+fn main() -> Result<()> {
+    use structopt::StructOpt;
+    let args = app::Options::from_args();
+
+    let source = Source::infer(args.files);
+
+    let replacer = Replacer::new(args.find, args.replace_with, args.literal_mode, args.flags)?;
+
+    // TODO: Implement replacer run.
+    Ok(())
 }
