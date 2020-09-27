@@ -4,7 +4,7 @@ mod input;
 pub(crate) mod utils;
 
 pub(crate) use self::input::{Replacer, Source};
-pub(crate) use error::Result;
+pub(crate) use error::{Error, Result};
 
 fn main() -> Result<()> {
     use structopt::StructOpt;
@@ -14,6 +14,7 @@ fn main() -> Result<()> {
 
     let replacer = Replacer::new(args.find, args.replace_with, args.literal_mode, args.flags)?;
 
-    // TODO: Implement replacer run.
+    replacer.run(&source, !args.preview)?;
+
     Ok(())
 }
