@@ -12,7 +12,12 @@ fn main() -> Result<()> {
 
     let source = Source::infer(args.files);
 
-    let replacer = Replacer::new(args.find, args.replace_with, args.literal_mode, args.flags)?;
+    let replacer = Replacer::new(
+        args.find,
+        args.replace_with,
+        args.literal_mode,
+        args.flags,
+    )?;
 
     replacer.run(&source, !args.preview)?;
 

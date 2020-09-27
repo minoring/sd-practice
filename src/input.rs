@@ -94,8 +94,10 @@ impl Replacer {
 
     fn replace<'a>(&'a self, content: &'a [u8]) -> std::borrow::Cow<'a, [u8]> {
         if self.is_literal {
-            self.regex
-                .replace_all(&content, regex::bytes::NoExpand(&self.replace_with))
+            self.regex.replace_all(
+                &content,
+                regex::bytes::NoExpand(&self.replace_with),
+            )
         } else {
             self.regex.replace_all(&content, &*self.replace_with)
         }
@@ -159,8 +161,9 @@ impl Replacer {
 
                 #[allow(unused_must_use)]
                 paths.par_iter().for_each(|p| {
-                    self.replace_file(p)
-                        .map_err(|e| eprintln!("Error processing {}: {}", p.display(), e));
+                    self.replace_file(p).map_err(|e| {
+                        eprintln!("Error processing {}: {}", p.display(), e)
+                    });
                 });
 
                 Ok(())
@@ -173,7 +176,8 @@ impl Replacer {
                     if let Err(_) = Self::check_not_empty(File::open(path)?) {
                         return Ok(());
                     }
-                    let file = unsafe { memmap::Mmap::map(&File::open(path)?)? };
+                    let file =
+                        unsafe { memmap::Mmap::map(&File::open(path)?)? };
                     handle.write_all(&self.replace(&file))?;
 
                     Ok(())
